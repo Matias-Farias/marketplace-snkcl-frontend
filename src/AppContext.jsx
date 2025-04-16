@@ -1,14 +1,11 @@
 import { createContext, useContext, useState } from 'react';
 
-// Crear el contexto
 const AppContext = createContext();
 
-// Proveedor del contexto
 export const AppProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [favorites, setFavorites] = useState([]);
 
-  // Función para agregar un producto al carrito
   const addToCart = (product) => {
     const existingItem = cart.find(
       (item) => item.id === product.id && item.selectedSize === product.selectedSize
@@ -26,12 +23,10 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // Función para eliminar un producto del carrito
   const removeFromCart = (productId) => {
     setCart(cart.filter((item) => item.id !== productId));
   };
 
-  // Función para actualizar la cantidad de un producto en el carrito
   const updateCartQuantity = (productId, quantity) => {
     if (quantity < 1) return;
     setCart(
@@ -41,7 +36,6 @@ export const AppProvider = ({ children }) => {
     );
   };
 
-  // Función para agregar o quitar un producto de favoritos
   const toggleFavorite = (productId) => {
     if (favorites.includes(productId)) {
       setFavorites(favorites.filter((id) => id !== productId));
@@ -50,7 +44,6 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // Valores que estarán disponibles en el contexto
   const value = {
     cart,
     favorites,
@@ -63,5 +56,4 @@ export const AppProvider = ({ children }) => {
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
 
-// Hook personalizado para usar el contexto
 export const useAppContext = () => useContext(AppContext);
