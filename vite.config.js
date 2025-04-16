@@ -3,9 +3,4 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  server: {
-    proxy: {
-      '/api': 'http://localhost:3000' // Asegurate que coincida con el puerto de tu backend
-    }
-  }
 })
