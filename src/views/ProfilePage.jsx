@@ -1,57 +1,81 @@
-import React, { useState, useEffect } from 'react';
-import { User, Package, Heart, LogOut, Edit2, Save, ShoppingBag, Home, Search, Plus, Trash2, X } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import {
+  User,
+  Package,
+  Heart,
+  LogOut,
+  Edit2,
+  Save,
+  ShoppingBag,
+  Home,
+  Search,
+  Plus,
+  Trash2,
+  X,
+} from "lucide-react";
 
-function ProfilePage({ 
-  onLogout, 
-  userData, 
-  myProducts, 
-  mySales, 
-  onUpdateUserData, 
-  onGoHome, 
-  favoritesCount, 
+function ProfilePage({
+  onLogout,
+  userData,
+  myProducts,
+  mySales,
+  onUpdateUserData,
+  onGoHome,
+  favoritesCount,
   favorites,
   onRemoveFromFavorites,
   onAddToCart,
   onAddProduct,
   onDeleteProduct,
-  onUpdateProduct
+  onUpdateProduct,
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState({
-    name: userData?.name || '',
-    email: userData?.email || '',
-    phone: userData?.phone || '',
-    address: userData?.address || ''
+    name: userData?.name || "",
+    email: userData?.email || "",
+    phone: userData?.phone || "",
+    address: userData?.address || "",
   });
 
-  const [activeTab, setActiveTab] = useState('profile');
+  const [activeTab, setActiveTab] = useState("profile");
   const [showAddProductModal, setShowAddProductModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [newProduct, setNewProduct] = useState({
-    name: '',
-    price: '',
-    description: '',
+    name: "",
+    price: "",
+    description: "",
     images: [],
-    sizes: []
+    sizes: [],
   });
-  const [selectedSize, setSelectedSize] = useState('');
-  const [newImageUrl, setNewImageUrl] = useState('');
+  const [selectedSize, setSelectedSize] = useState("");
+  const [newImageUrl, setNewImageUrl] = useState("");
 
-  const availableSizes = ['36', '37', '38', '39', '40', '41', '42', '43', '44', '45'];
+  const availableSizes = [
+    "36",
+    "37",
+    "38",
+    "39",
+    "40",
+    "41",
+    "42",
+    "43",
+    "44",
+    "45",
+  ];
 
   useEffect(() => {
     setEditedData({
-      name: userData?.name || '',
-      email: userData?.email || '',
-      phone: userData?.phone || '',
-      address: userData?.address || ''
+      name: userData?.name || "",
+      email: userData?.email || "",
+      phone: userData?.phone || "",
+      address: userData?.address || "",
     });
   }, [userData]);
 
   const handleSave = () => {
     onUpdateUserData({
       ...userData,
-      ...editedData
+      ...editedData,
     });
     setIsEditing(false);
   };
@@ -60,16 +84,16 @@ function ProfilePage({
     if (newImageUrl && !newProduct.images.includes(newImageUrl)) {
       setNewProduct({
         ...newProduct,
-        images: [...newProduct.images, newImageUrl]
+        images: [...newProduct.images, newImageUrl],
       });
-      setNewImageUrl('');
+      setNewImageUrl("");
     }
   };
 
   const handleRemoveImage = (urlToRemove) => {
     setNewProduct({
       ...newProduct,
-      images: newProduct.images.filter(url => url !== urlToRemove)
+      images: newProduct.images.filter((url) => url !== urlToRemove),
     });
   };
 
@@ -77,16 +101,16 @@ function ProfilePage({
     if (selectedSize && !newProduct.sizes.includes(selectedSize)) {
       setNewProduct({
         ...newProduct,
-        sizes: [...newProduct.sizes, selectedSize]
+        sizes: [...newProduct.sizes, selectedSize],
       });
-      setSelectedSize('');
+      setSelectedSize("");
     }
   };
 
   const handleRemoveSize = (sizeToRemove) => {
     setNewProduct({
       ...newProduct,
-      sizes: newProduct.sizes.filter(size => size !== sizeToRemove)
+      sizes: newProduct.sizes.filter((size) => size !== sizeToRemove),
     });
   };
 
@@ -99,11 +123,17 @@ function ProfilePage({
     const product = {
       ...newProduct,
       id: Date.now(),
-      price: parseFloat(newProduct.price)
+      price: parseFloat(newProduct.price),
     };
 
     onAddProduct(product);
-    setNewProduct({ name: '', price: '', description: '', images: [], sizes: [] });
+    setNewProduct({
+      name: "",
+      price: "",
+      description: "",
+      images: [],
+      sizes: [],
+    });
     setShowAddProductModal(false);
   };
 
@@ -111,7 +141,7 @@ function ProfilePage({
     setEditingProduct(product);
     setNewProduct({
       ...product,
-      price: product.price.toString()
+      price: product.price.toString(),
     });
     setShowAddProductModal(true);
   };
@@ -125,11 +155,17 @@ function ProfilePage({
     const updatedProduct = {
       ...newProduct,
       id: editingProduct.id,
-      price: parseFloat(newProduct.price)
+      price: parseFloat(newProduct.price),
     };
 
     onUpdateProduct(updatedProduct);
-    setNewProduct({ name: '', price: '', description: '', images: [], sizes: [] });
+    setNewProduct({
+      name: "",
+      price: "",
+      description: "",
+      images: [],
+      sizes: [],
+    });
     setEditingProduct(null);
     setShowAddProductModal(false);
   };
@@ -155,39 +191,43 @@ function ProfilePage({
                 <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center mb-4">
                   <User size={48} className="text-gray-600" />
                 </div>
-                <h2 className="text-xl font-bold">{userData?.name || 'Usuario'}</h2>
-                <p className="text-gray-600">{userData?.email || 'usuario@ejemplo.com'}</p>
+                <h2 className="text-xl font-bold">
+                  {userData?.name || "Usuario"}
+                </h2>
+                <p className="text-gray-600">
+                  {userData?.email || "usuario@ejemplo.com"}
+                </p>
               </div>
 
               <div className="space-y-2">
                 <button
-                  onClick={() => setActiveTab('profile')}
+                  onClick={() => setActiveTab("profile")}
                   className={`w-full text-left px-4 py-3 rounded-lg flex items-center space-x-3 ${
-                    activeTab === 'profile'
-                      ? 'bg-red-600 text-white'
-                      : 'hover:bg-gray-100'
+                    activeTab === "profile"
+                      ? "bg-red-600 text-white"
+                      : "hover:bg-gray-100"
                   }`}
                 >
                   <User size={20} />
                   <span>Perfil</span>
                 </button>
                 <button
-                  onClick={() => setActiveTab('purchases')}
+                  onClick={() => setActiveTab("purchases")}
                   className={`w-full text-left px-4 py-3 rounded-lg flex items-center space-x-3 ${
-                    activeTab === 'purchases'
-                      ? 'bg-red-600 text-white'
-                      : 'hover:bg-gray-100'
+                    activeTab === "purchases"
+                      ? "bg-red-600 text-white"
+                      : "hover:bg-gray-100"
                   }`}
                 >
                   <ShoppingBag size={20} />
                   <span>Mis Compras</span>
                 </button>
                 <button
-                  onClick={() => setActiveTab('favorites')}
+                  onClick={() => setActiveTab("favorites")}
                   className={`w-full text-left px-4 py-3 rounded-lg flex items-center space-x-3 ${
-                    activeTab === 'favorites'
-                      ? 'bg-red-600 text-white'
-                      : 'hover:bg-gray-100'
+                    activeTab === "favorites"
+                      ? "bg-red-600 text-white"
+                      : "hover:bg-gray-100"
                   }`}
                 >
                   <Heart size={20} />
@@ -199,23 +239,23 @@ function ProfilePage({
                   )}
                 </button>
                 <button
-                  onClick={() => setActiveTab('listings')}
+                  onClick={() => setActiveTab("listings")}
                   className={`w-full text-left px-4 py-3 rounded-lg flex items-center space-x-3 ${
-                    activeTab === 'listings'
-                      ? 'bg-red-600 text-white'
-                      : 'hover:bg-gray-100'
+                    activeTab === "listings"
+                      ? "bg-red-600 text-white"
+                      : "hover:bg-gray-100"
                   }`}
                 >
                   <Package size={20} />
                   <span>Mis Publicaciones</span>
                 </button>
-                
+
                 <button
-                  onClick={() => setActiveTab('sales')}
+                  onClick={() => setActiveTab("sales")}
                   className={`w-full text-left px-4 py-3 rounded-lg flex items-center space-x-3 ${
-                    activeTab === 'sales'
-                      ? 'bg-red-600 text-white'
-                      : 'hover:bg-gray-100'
+                    activeTab === "sales"
+                      ? "bg-red-600 text-white"
+                      : "hover:bg-gray-100"
                   }`}
                 >
                   <ShoppingBag size={20} />
@@ -235,42 +275,70 @@ function ProfilePage({
           {/* Main Content */}
           <div className="col-span-12 md:col-span-9">
             <div className="bg-white rounded-lg shadow-lg p-6">
-              {activeTab === 'profile' && (
+              {activeTab === "profile" && (
                 <div className="space-y-6">
                   {isEditing ? (
                     <>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700">Name</label>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Name
+                        </label>
                         <input
                           type="text"
                           value={editedData.name}
-                          onChange={(e) => setEditedData({...editedData, name: e.target.value})}
+                          onChange={(e) =>
+                            setEditedData({
+                              ...editedData,
+                              name: e.target.value,
+                            })
+                          }
                           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-600 focus:ring focus:ring-red-200 p-2 border"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700">Email</label>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Email
+                        </label>
                         <input
                           type="email"
                           value={editedData.email}
-                          onChange={(e) => setEditedData({...editedData, email: e.target.value})}
+                          onChange={(e) =>
+                            setEditedData({
+                              ...editedData,
+                              email: e.target.value,
+                            })
+                          }
                           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-600 focus:ring focus:ring-red-200 p-2 border"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700">Phone</label>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Phone
+                        </label>
                         <input
                           type="tel"
                           value={editedData.phone}
-                          onChange={(e) => setEditedData({...editedData, phone: e.target.value})}
+                          onChange={(e) =>
+                            setEditedData({
+                              ...editedData,
+                              phone: e.target.value,
+                            })
+                          }
                           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-600 focus:ring focus:ring-red-200 p-2 border"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700">Address</label>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Address
+                        </label>
                         <textarea
                           value={editedData.address}
-                          onChange={(e) => setEditedData({...editedData, address: e.target.value})}
+                          onChange={(e) =>
+                            setEditedData({
+                              ...editedData,
+                              address: e.target.value,
+                            })
+                          }
                           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-600 focus:ring focus:ring-red-200 p-2 border"
                           rows={3}
                         />
@@ -296,7 +364,9 @@ function ProfilePage({
                       <div className="space-y-6">
                         <div>
                           <div className="flex justify-between items-center mb-4">
-                            <h3 className="text-xl font-semibold text-gray-900">Información Personal</h3>
+                            <h3 className="text-xl font-semibold text-gray-900">
+                              Información Personal
+                            </h3>
                             <button
                               onClick={() => setIsEditing(true)}
                               className="text-red-600 hover:text-red-800 flex items-center space-x-2"
@@ -308,20 +378,36 @@ function ProfilePage({
                           <div className="bg-gray-50 p-6 rounded-lg space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                               <div>
-                                <h4 className="text-sm font-medium text-gray-500">Nombre</h4>
-                                <p className="mt-1 text-lg text-gray-900">{userData?.name || 'Not set'}</p>
+                                <h4 className="text-sm font-medium text-gray-500">
+                                  Nombre
+                                </h4>
+                                <p className="mt-1 text-lg text-gray-900">
+                                  {userData?.name || "Not set"}
+                                </p>
                               </div>
                               <div>
-                                <h4 className="text-sm font-medium text-gray-500">Email</h4>
-                                <p className="mt-1 text-lg text-gray-900">{userData?.email || 'Not set'}</p>
+                                <h4 className="text-sm font-medium text-gray-500">
+                                  Email
+                                </h4>
+                                <p className="mt-1 text-lg text-gray-900">
+                                  {userData?.email || "Not set"}
+                                </p>
                               </div>
                               <div>
-                                <h4 className="text-sm font-medium text-gray-500">Número Telefonico</h4>
-                                <p className="mt-1 text-lg text-gray-900">{userData?.phone || 'Not set'}</p>
+                                <h4 className="text-sm font-medium text-gray-500">
+                                  Número Telefonico
+                                </h4>
+                                <p className="mt-1 text-lg text-gray-900">
+                                  {userData?.phone || "Not set"}
+                                </p>
                               </div>
                               <div>
-                                <h4 className="text-sm font-medium text-gray-500">Dirección</h4>
-                                <p className="mt-1 text-lg text-gray-900">{userData?.address || 'Not set'}</p>
+                                <h4 className="text-sm font-medium text-gray-500">
+                                  Dirección
+                                </h4>
+                                <p className="mt-1 text-lg text-gray-900">
+                                  {userData?.address || "Not set"}
+                                </p>
                               </div>
                             </div>
                           </div>
@@ -332,68 +418,85 @@ function ProfilePage({
                 </div>
               )}
 
-              {activeTab === 'purchases' && (
+              {activeTab === "purchases" && (
                 <div className="space-y-6">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-6">Historial de Compras</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-6">
+                    Historial de Compras
+                  </h3>
                   {userData?.purchases?.length > 0 ? (
                     <div className="grid gap-6">
-                      {userData.purchases.map(purchase => (
-                        <div key={purchase.id} className="bg-white border rounded-lg p-6 shadow-sm">
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <h4 className="text-lg font-semibold text-gray-900">{purchase.product}</h4>
-                              <p className="text-gray-500 mt-1">Fecha de Compra: {purchase.date}</p>
-                            </div>
-                            <span className={`px-3 py-1 rounded-full text-sm ${
-                              purchase.status === 'Delivered' 
-                                ? 'bg-green-100 text-green-800'
-                                : 'bg-blue-100 text-blue-800'
-                            }`}>
-                              {purchase.status}
-                            </span>
-                          </div>
-                          {purchase.items && (
-                            <div className="mt-4 space-y-2">
-                              {purchase.items.map((item, index) => (
-                                <div key={index} className="flex justify-between items-center text-gray-600">
-                                  <span>{item.name} (x{item.quantity || 1})</span>
-                                  <span className="font-medium">
-                                    ${(item.price * (item.quantity || 1)).toFixed(2)}
-                                  </span>
-                                </div>
-                              ))}
-                            </div>
-                          )}
+                      {userData.purchases.map((purchase, index) => (
+                        <div
+                          key={index}
+                          className="bg-white border rounded-lg p-6 shadow-sm"
+                        >
+                          <h4 className="text-lg font-semibold text-gray-900">
+                            {purchase.product_name}
+                          </h4>
+                          <p className="text-gray-500 mt-1">
+                            Talla: {purchase.size}
+                          </p>
+                          <p className="text-gray-500">
+                            Cantidad: {purchase.quantity}
+                          </p>
+                          <p className="text-gray-500">
+                            Fecha:{" "}
+                            {new Date(purchase.created_at).toLocaleDateString()}
+                          </p>
+                          <p className="text-red-600 font-bold text-lg">
+                            $
+                            {(
+                              purchase.product_price * purchase.quantity
+                            ).toFixed(2)}
+                          </p>
                         </div>
                       ))}
                     </div>
                   ) : (
                     <div className="text-center py-12 bg-gray-50 rounded-lg">
-                      <ShoppingBag size={64} className="mx-auto mb-4 text-gray-400" />
-                      <p className="text-xl text-gray-500">No hay compras aún</p>
-                      <p className="text-gray-400 mt-2">Tus compras las podras ver acá</p>
+                      <ShoppingBag
+                        size={64}
+                        className="mx-auto mb-4 text-gray-400"
+                      />
+                      <p className="text-xl text-gray-500">
+                        No hay compras aún
+                      </p>
+                      <p className="text-gray-400 mt-2">
+                        Tus compras las podrás ver acá
+                      </p>
                     </div>
                   )}
                 </div>
               )}
 
-              {activeTab === 'favorites' && (
+              {activeTab === "favorites" && (
                 <div className="space-y-6">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-6">Mis Favoritos</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-6">
+                    Mis Favoritos
+                  </h3>
                   {favorites?.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {favorites.map(product => (
-                        <div key={product.id} className="bg-white border rounded-lg overflow-hidden shadow-sm">
+                      {favorites.map((product) => (
+                        <div
+                          key={product.id}
+                          className="bg-white border rounded-lg overflow-hidden shadow-sm"
+                        >
                           <img
                             src={product.images[0]}
                             alt={product.name}
                             className="w-full h-48 object-cover"
                           />
                           <div className="p-4">
-                            <h4 className="text-lg font-semibold text-gray-900">{product.name}</h4>
-                            <p className="text-gray-500 mt-1">{product.description}</p>
+                            <h4 className="text-lg font-semibold text-gray-900">
+                              {product.name}
+                            </h4>
+                            <p className="text-gray-500 mt-1">
+                              {product.description}
+                            </p>
                             <div className="mt-4 flex justify-between items-center">
-                              <p className="text-xl font-bold text-red-600">${product.price}</p>
+                              <p className="text-xl font-bold text-red-600">
+                                ${product.price}
+                              </p>
                               <div className="flex space-x-2">
                                 <button
                                   onClick={() => onAddToCart(product)}
@@ -402,7 +505,9 @@ function ProfilePage({
                                   Agregar al carro
                                 </button>
                                 <button
-                                  onClick={() => onRemoveFromFavorites(product.id)}
+                                  onClick={() =>
+                                    onRemoveFromFavorites(product.id)
+                                  }
                                   className="text-red-600 hover:text-red-800"
                                 >
                                   <Trash2 size={20} />
@@ -416,21 +521,33 @@ function ProfilePage({
                   ) : (
                     <div className="text-center py-12 bg-gray-50 rounded-lg">
                       <Heart size={64} className="mx-auto mb-4 text-gray-400" />
-                      <p className="text-xl text-gray-500">Aún no hay favoritos</p>
-                      <p className="text-gray-400 mt-2">Tus productos favoritos estaran acá</p>
+                      <p className="text-xl text-gray-500">
+                        Aún no hay favoritos
+                      </p>
+                      <p className="text-gray-400 mt-2">
+                        Tus productos favoritos estaran acá
+                      </p>
                     </div>
                   )}
                 </div>
               )}
 
-              {activeTab === 'listings' && (
+              {activeTab === "listings" && (
                 <div className="space-y-6">
                   <div className="flex justify-between items-center mb-6">
-                    <h3 className="text-xl font-semibold text-gray-900">Mis Publicaciones</h3>
+                    <h3 className="text-xl font-semibold text-gray-900">
+                      Mis Publicaciones
+                    </h3>
                     <button
                       onClick={() => {
                         setEditingProduct(null);
-                        setNewProduct({ name: '', price: '', description: '', images: [], sizes: [] });
+                        setNewProduct({
+                          name: "",
+                          price: "",
+                          description: "",
+                          images: [],
+                          sizes: [],
+                        });
                         setShowAddProductModal(true);
                       }}
                       className="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700 flex items-center space-x-2"
@@ -441,28 +558,42 @@ function ProfilePage({
                   </div>
                   {myProducts?.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {myProducts.map(product => (
-                        <div key={product.id} className="bg-white border rounded-lg overflow-hidden shadow-sm">
+                      {myProducts.map((product) => (
+                        <div
+                          key={product.id}
+                          className="bg-white border rounded-lg overflow-hidden shadow-sm"
+                        >
                           <img
                             src={product.images[0]}
                             alt={product.name}
                             className="w-full h-48 object-cover"
                           />
                           <div className="p-6">
-                            <h4 className="text-lg font-semibold text-gray-900">{product.name}</h4>
-                            <p className="text-gray-500 mt-1">{product.description}</p>
+                            <h4 className="text-lg font-semibold text-gray-900">
+                              {product.name}
+                            </h4>
+                            <p className="text-gray-500 mt-1">
+                              {product.description}
+                            </p>
                             <div className="mt-2">
-                              <span className="text-sm font-medium text-gray-600">Sizes:</span>
+                              <span className="text-sm font-medium text-gray-600">
+                                Sizes:
+                              </span>
                               <div className="flex flex-wrap gap-2 mt-1">
                                 {product.sizes.map((size) => (
-                                  <span key={size} className="px-2 py-1 bg-gray-100 rounded-md text-sm">
+                                  <span
+                                    key={size}
+                                    className="px-2 py-1 bg-gray-100 rounded-md text-sm"
+                                  >
                                     {size}
                                   </span>
                                 ))}
                               </div>
                             </div>
                             <div className="mt-4 flex justify-between items-center">
-                              <p className="text-xl font-bold text-red-600">${product.price}</p>
+                              <p className="text-xl font-bold text-red-600">
+                                ${product.price}
+                              </p>
                               <div className="flex space-x-2">
                                 <button
                                   onClick={() => handleStartEditing(product)}
@@ -484,44 +615,63 @@ function ProfilePage({
                     </div>
                   ) : (
                     <div className="text-center py-12 bg-gray-50 rounded-lg">
-                      <Package size={64} className="mx-auto mb-4 text-gray-400" />
-                      <p className="text-xl text-gray-500">No publicas nada aún</p>
-                      <p className="text-gray-400 mt-2">Tus Publicaciones las veras aca</p>
+                      <Package
+                        size={64}
+                        className="mx-auto mb-4 text-gray-400"
+                      />
+                      <p className="text-xl text-gray-500">
+                        No publicas nada aún
+                      </p>
+                      <p className="text-gray-400 mt-2">
+                        Tus Publicaciones las veras aca
+                      </p>
                     </div>
                   )}
                 </div>
               )}
 
-              {activeTab === 'sales' && (
-                <div className="space-y-6">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-6">Historial de Ventas</h3>
-                  {mySales?.length > 0 ? (
-                    <div className="grid gap-6">
-                      {mySales.map(sale => (
-                        <div key={sale.id} className="bg-white border rounded-lg p-6 shadow-sm">
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <h4 className="text-lg font-semibold text-gray-900">{sale.product}</h4>
-                              <p className="text-gray-500 mt-1">Sold on: {sale.date}</p>
-                              <p className="text-gray-500">Buyer: {sale.buyer}</p>
-                              <p className="text-gray-500">Quantity: {sale.quantity}</p>
-                            </div>
-                            <p className="text-xl font-bold text-red-600">
-                              ${(sale.price * (sale.quantity || 1)).toFixed(2)}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-center py-12 bg-gray-50 rounded-lg">
-                      <ShoppingBag size={64} className="mx-auto mb-4 text-gray-400" />
-                      <p className="text-xl text-gray-500">Aún no vendes nada</p>
-                      <p className="text-gray-400 mt-2">Tus ventas las veras acá</p>
-                    </div>
-                  )}
-                </div>
-              )}
+{activeTab === "sales" && (
+  <div className="space-y-6">
+    <h3 className="text-xl font-semibold text-gray-900 mb-6">
+      Historial de Ventas
+    </h3>
+    {userData?.sales?.length > 0 ? (
+      <div className="grid gap-6">
+        {userData.sales.map((sale) => (
+          <div
+            key={sale.id}
+            className="bg-white border rounded-lg p-6 shadow-sm"
+          >
+            <div className="flex justify-between items-start">
+              <div>
+                <h4 className="text-lg font-semibold text-gray-900">
+                  {sale.product_name}
+                </h4>
+                <p className="text-gray-500 mt-1">
+                  Vendido el: {new Date(sale.created_at).toLocaleDateString()}
+                </p>
+                <p className="text-gray-500">Comprador: {sale.buyer_name}</p>
+                <p className="text-gray-500">Cantidad: {sale.quantity}</p>
+              </div>
+              <p className="text-xl font-bold text-red-600">
+                ${(sale.product_price * sale.quantity).toFixed(2)}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <div className="text-center py-12 bg-gray-50 rounded-lg">
+        <ShoppingBag
+          size={64}
+          className="mx-auto mb-4 text-gray-400"
+        />
+        <p className="text-xl text-gray-500">Aún no vendes nada</p>
+        <p className="text-gray-400 mt-2">Tus ventas las verás acá</p>
+      </div>
+    )}
+  </div>
+)}
             </div>
           </div>
         </div>
@@ -535,19 +685,30 @@ function ProfilePage({
               onClick={() => {
                 setShowAddProductModal(false);
                 setEditingProduct(null);
-                setNewProduct({ name: '', price: '', description: '', images: [], sizes: [] });
+                setNewProduct({
+                  name: "",
+                  price: "",
+                  description: "",
+                  images: [],
+                  sizes: [],
+                });
               }}
               className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
             >
               <X size={24} />
             </button>
-            
+
             <div className="p-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                {editingProduct ? 'Edit Product' : 'Add New Product'}
+                {editingProduct ? "Edit Product" : "Add New Product"}
               </h2>
-              
-              <form onSubmit={editingProduct ? handleUpdateProduct : handleAddProduct} className="space-y-4">
+
+              <form
+                onSubmit={
+                  editingProduct ? handleUpdateProduct : handleAddProduct
+                }
+                className="space-y-4"
+              >
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
                     Titulo
@@ -555,12 +716,14 @@ function ProfilePage({
                   <input
                     type="text"
                     value={newProduct.name}
-                    onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}
+                    onChange={(e) =>
+                      setNewProduct({ ...newProduct, name: e.target.value })
+                    }
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-600 focus:ring focus:ring-red-200 p-2 border"
                     required
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
                     Precio
@@ -569,19 +732,26 @@ function ProfilePage({
                     type="number"
                     step="0.01"
                     value={newProduct.price}
-                    onChange={(e) => setNewProduct({...newProduct, price: e.target.value})}
+                    onChange={(e) =>
+                      setNewProduct({ ...newProduct, price: e.target.value })
+                    }
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-600 focus:ring focus:ring-red-200 p-2 border"
                     required
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
                     Descripción
                   </label>
                   <textarea
                     value={newProduct.description}
-                    onChange={(e) => setNewProduct({...newProduct, description: e.target.value})}
+                    onChange={(e) =>
+                      setNewProduct({
+                        ...newProduct,
+                        description: e.target.value,
+                      })
+                    }
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-600 focus:ring focus:ring-red-200 p-2 border"
                     rows={3}
                     required
@@ -610,7 +780,7 @@ function ProfilePage({
                         Agregar
                       </button>
                     </div>
-                    
+
                     <div className="grid grid-cols-2 gap-2">
                       {newProduct.images.map((url, index) => (
                         <div key={index} className="relative group">
@@ -631,7 +801,7 @@ function ProfilePage({
                     </div>
                   </div>
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
                     Tallas
@@ -643,7 +813,7 @@ function ProfilePage({
                       className="block w-full rounded-md border-gray-300 shadow-sm focus:border-red-600 focus:ring focus:ring-red-200 p-2 border"
                     >
                       <option value="">Seleccionar Talla</option>
-                      {availableSizes.map(size => (
+                      {availableSizes.map((size) => (
                         <option key={size} value={size}>
                           {size}
                         </option>
@@ -658,7 +828,7 @@ function ProfilePage({
                     </button>
                   </div>
                   <div className="flex flex-wrap gap-2 mt-2">
-                    {newProduct.sizes.map(size => (
+                    {newProduct.sizes.map((size) => (
                       <span
                         key={size}
                         className="px-2 py-1 bg-gray-100 rounded-md text-sm flex items-center"
@@ -675,12 +845,12 @@ function ProfilePage({
                     ))}
                   </div>
                 </div>
-                
+
                 <button
                   type="submit"
                   className="w-full bg-red-600 text-white rounded-full py-2 px-4 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                 >
-                  {editingProduct ? 'Update Product' : 'Add Product'}
+                  {editingProduct ? "Update Product" : "Add Product"}
                 </button>
               </form>
             </div>

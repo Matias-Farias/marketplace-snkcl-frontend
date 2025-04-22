@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPurchase } from '../services/api';
 import { ShoppingCart, Heart, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 
 function ProductDetail({ product, onClose, onAddToCart, onToggleFavorite, isFavorite, isLoggedIn }) {
@@ -24,7 +25,7 @@ function ProductDetail({ product, onClose, onAddToCart, onToggleFavorite, isFavo
     onAddToCart({ ...product, selectedSize });
   };
 
-  const handleBuyNow = () => {
+  const handleBuyNow = async () => {
     if (!isLoggedIn) {
       alert('Please log in to make a purchase');
       return;
@@ -33,7 +34,20 @@ function ProductDetail({ product, onClose, onAddToCart, onToggleFavorite, isFavo
       alert('Please select a size');
       return;
     }
-    onAddToCart({ ...product, selectedSize });
+  
+    try {
+      const item = {
+        ...product,
+        selectedSize,
+        id: product.id,
+        quantity: 1
+      };
+      await createPurchase([item]);
+      alert('Compra realizada exitosamente');
+    } catch (error) {
+      alert('Error al realizar la compra');
+      console.error('❌ Error al comprar:', error);
+    }
   };
 
   const nextImage = () => {

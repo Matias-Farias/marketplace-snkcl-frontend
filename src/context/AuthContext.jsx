@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { login as loginApi, logout as logoutApi } from '../services/api';
+import { login as loginApi, logout as logoutApi, fetchUserPurchases, fetchUserSales } from '../services/api';
 import toast from 'react-hot-toast';
 
 const AuthContext = createContext(null);
@@ -9,24 +9,38 @@ export function AuthProvider({ children }) {
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    try {
-      const storedUser = localStorage.getItem('user');
-      if (storedUser && storedUser !== 'undefined') {
-        setUserData(JSON.parse(storedUser));
-        setIsLoggedIn(true);
+    const loadUserData = async () => {
+      try {
+        const storedUser = JSON.parse(localStorage.getItem('user'));
+        if (storedUser && localStorage.getItem('token')) {
+          const [purchases, sales] = await Promise.all([
+            fetchUserPurchases(),
+            fetchUserSales()
+          ]);
+          setUserData({ ...storedUser, purchases, sales });
+          setIsLoggedIn(true);
+        }
+      } catch (error) {
+        console.error('Error al cargar datos del usuario:', error);
+        localStorage.removeItem('user');
       }
-    } catch (error) {
-      console.error('Error al parsear user en localStorage:', error);
-      localStorage.removeItem('user');
-    }
+    };
+
+    loadUserData();
   }, []);
 
   const login = async (loginData) => {
     try {
       const response = await loginApi(loginData);
+      const [purchases, sales] = await Promise.all([
+        fetchUserPurchases(),
+        fetchUserSales()
+      ]);
+
+      const fullUserData = { ...response.user, purchases, sales };
       setIsLoggedIn(true);
-      setUserData(response.user);
-      localStorage.setItem('user', JSON.stringify(response.user));
+      setUserData(fullUserData);
+      localStorage.setItem('user', JSON.stringify(fullUserData));
       toast.success('¡Bienvenido!');
     } catch (error) {
       toast.error('Error al iniciar sesión');
