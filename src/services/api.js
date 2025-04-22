@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://marketplace-snkcl-backend.onrender.com'
+  baseURL: 'https://marketplace-snkcl-backend.onrender.com/api'
 });
 
 api.interceptors.request.use(config => {
