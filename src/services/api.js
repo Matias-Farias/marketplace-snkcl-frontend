@@ -36,7 +36,7 @@ export const fetchProducts = async () => {
 };
 
 export const fetchUserProducts = async () => {
-  const response = await api.get('/products/mine'); // 🔥 esta es la ruta correcta
+  const response = await api.get('/products/mine'); 
   return response.data;
 };
 
