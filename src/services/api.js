@@ -35,6 +35,11 @@ export const fetchProducts = async () => {
   return response.data;
 };
 
+export const fetchUserProducts = async () => {
+  const response = await api.get('/products/mine'); // 🔥 esta es la ruta correcta
+  return response.data;
+};
+
 export const addProduct = async (productData) => {
   const response = await api.post('/products', productData);
   return response.data;
@@ -72,10 +77,5 @@ export const fetchFavorites = async () => {
 
 export const toggleFavorite = async (productId) => {
   const response = await api.post(`/users/favorites/${productId}`);
-  return response.data;
-};
-
-export const fetchUserProducts = async () => {
-  const response = await api.get('/users/products');
   return response.data;
 };
