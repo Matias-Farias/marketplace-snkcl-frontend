@@ -15,11 +15,11 @@ function ProductDetail({ product, onClose, onAddToCart, onToggleFavorite, isFavo
 
   const handleAddToCart = () => {
     if (!isLoggedIn) {
-      alert('Please log in to add items to cart');
+      alert('Inicie sesión para añadir artículos al carro');
       return;
     }
     if (!selectedSize) {
-      alert('Please select a size');
+      alert('Por favor selecciona la talla');
       return;
     }
     onAddToCart({ ...product, selectedSize });
@@ -27,20 +27,19 @@ function ProductDetail({ product, onClose, onAddToCart, onToggleFavorite, isFavo
 
   const handleBuyNow = async () => {
     if (!isLoggedIn) {
-      alert('Please log in to make a purchase');
+      alert('Inicie sesión para realizar una compra');
       return;
     }
     if (!selectedSize) {
-      alert('Please select a size');
+      alert('Por favor selecciona la talla');
       return;
     }
   
     try {
       const item = {
-        ...product,
-        selectedSize,
-        id: product.id,
-        quantity: 1
+        productId: product.id,
+        quantity: 1,
+        size: selectedSize
       };
       await createPurchase([item]);
       alert('Compra realizada exitosamente');
@@ -176,4 +175,4 @@ function ProductDetail({ product, onClose, onAddToCart, onToggleFavorite, isFavo
   );
 }
 
-export default ProductDetail
+export default ProductDetail;

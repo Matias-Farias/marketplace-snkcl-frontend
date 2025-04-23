@@ -1,5 +1,11 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { login as loginApi, logout as logoutApi, fetchUserPurchases, fetchUserSales } from '../services/api';
+import {
+  login as loginApi,
+  logout as logoutApi,
+  fetchUserPurchases,
+  fetchUserSales,
+  fetchUserProducts
+} from '../services/api';
 import toast from 'react-hot-toast';
 
 const AuthContext = createContext(null);
@@ -13,11 +19,13 @@ export function AuthProvider({ children }) {
       try {
         const storedUser = JSON.parse(localStorage.getItem('user'));
         if (storedUser && localStorage.getItem('token')) {
-          const [purchases, sales] = await Promise.all([
+          const [purchases, sales, myProducts] = await Promise.all([
             fetchUserPurchases(),
-            fetchUserSales()
+            fetchUserSales(),
+            fetchUserProducts()
           ]);
-          setUserData({ ...storedUser, purchases, sales });
+          const fullUserData = { ...storedUser, purchases, sales, myProducts };
+          setUserData(fullUserData);
           setIsLoggedIn(true);
         }
       } catch (error) {
@@ -32,12 +40,13 @@ export function AuthProvider({ children }) {
   const login = async (loginData) => {
     try {
       const response = await loginApi(loginData);
-      const [purchases, sales] = await Promise.all([
+      const [purchases, sales, myProducts] = await Promise.all([
         fetchUserPurchases(),
-        fetchUserSales()
+        fetchUserSales(),
+        fetchUserProducts()
       ]);
 
-      const fullUserData = { ...response.user, purchases, sales };
+      const fullUserData = { ...response.user, purchases, sales, myProducts };
       setIsLoggedIn(true);
       setUserData(fullUserData);
       localStorage.setItem('user', JSON.stringify(fullUserData));

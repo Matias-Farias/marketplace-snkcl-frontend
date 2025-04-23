@@ -17,8 +17,6 @@ import {
 function ProfilePage({
   onLogout,
   userData,
-  myProducts,
-  mySales,
   onUpdateUserData,
   onGoHome,
   favoritesCount,
@@ -556,9 +554,9 @@ function ProfilePage({
                       <span>Agregar Nuevo Producto</span>
                     </button>
                   </div>
-                  {myProducts?.length > 0 ? (
+                  {userData?.myProducts?.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {myProducts.map((product) => (
+                      {userData.myProducts.map((product) => (
                         <div
                           key={product.id}
                           className="bg-white border rounded-lg overflow-hidden shadow-sm"
@@ -630,48 +628,57 @@ function ProfilePage({
                 </div>
               )}
 
-{activeTab === "sales" && (
-  <div className="space-y-6">
-    <h3 className="text-xl font-semibold text-gray-900 mb-6">
-      Historial de Ventas
-    </h3>
-    {userData?.sales?.length > 0 ? (
-      <div className="grid gap-6">
-        {userData.sales.map((sale) => (
-          <div
-            key={sale.id}
-            className="bg-white border rounded-lg p-6 shadow-sm"
-          >
-            <div className="flex justify-between items-start">
-              <div>
-                <h4 className="text-lg font-semibold text-gray-900">
-                  {sale.product_name}
-                </h4>
-                <p className="text-gray-500 mt-1">
-                  Vendido el: {new Date(sale.created_at).toLocaleDateString()}
-                </p>
-                <p className="text-gray-500">Comprador: {sale.buyer_name}</p>
-                <p className="text-gray-500">Cantidad: {sale.quantity}</p>
-              </div>
-              <p className="text-xl font-bold text-red-600">
-                ${(sale.product_price * sale.quantity).toFixed(2)}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
-    ) : (
-      <div className="text-center py-12 bg-gray-50 rounded-lg">
-        <ShoppingBag
-          size={64}
-          className="mx-auto mb-4 text-gray-400"
-        />
-        <p className="text-xl text-gray-500">Aún no vendes nada</p>
-        <p className="text-gray-400 mt-2">Tus ventas las verás acá</p>
-      </div>
-    )}
-  </div>
-)}
+              {activeTab === "sales" && (
+                <div className="space-y-6">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-6">
+                    Historial de Ventas
+                  </h3>
+                  {userData?.sales?.length > 0 ? (
+                    <div className="grid gap-6">
+                      {userData.sales.map((sale) => (
+                        <div
+                          key={sale.id}
+                          className="bg-white border rounded-lg p-6 shadow-sm"
+                        >
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <h4 className="text-lg font-semibold text-gray-900">
+                                {sale.product_name}
+                              </h4>
+                              <p className="text-gray-500 mt-1">
+                                Vendido el:{" "}
+                                {new Date(sale.created_at).toLocaleDateString()}
+                              </p>
+                              <p className="text-gray-500">
+                                Comprador: {sale.buyer_name}
+                              </p>
+                              <p className="text-gray-500">
+                                Cantidad: {sale.quantity}
+                              </p>
+                            </div>
+                            <p className="text-xl font-bold text-red-600">
+                              ${(sale.product_price * sale.quantity).toFixed(2)}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-12 bg-gray-50 rounded-lg">
+                      <ShoppingBag
+                        size={64}
+                        className="mx-auto mb-4 text-gray-400"
+                      />
+                      <p className="text-xl text-gray-500">
+                        Aún no vendes nada
+                      </p>
+                      <p className="text-gray-400 mt-2">
+                        Tus ventas las verás acá
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>

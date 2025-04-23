@@ -1,11 +1,12 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { 
+import {
   fetchProducts as fetchProductsApi,
   addProduct as addProductApi,
   updateProduct as updateProductApi,
   deleteProduct as deleteProductApi,
   fetchUserSales as fetchUserSalesApi
 } from '../services/api';
+import { useAuth } from './AuthContext';
 import toast from 'react-hot-toast';
 
 const ProductContext = createContext(null);
@@ -15,15 +16,22 @@ export function ProductProvider({ children }) {
   const [myProducts, setMyProducts] = useState([]);
   const [mySales, setMySales] = useState([]);
 
+  const { userData } = useAuth();
+
   useEffect(() => {
     loadProducts();
-  }, []);
+  }, [userData]); 
 
   const loadProducts = async () => {
     try {
       const data = await fetchProductsApi();
-      console.log("🔍 Productos desde API:", data);
       setProducts(data);
+
+    
+      if (userData?.id) {
+        const mine = data.filter(p => p.user_id === userData.id);
+        setMyProducts(mine);
+      }
     } catch (error) {
       toast.error('Error al cargar los productos');
     }
@@ -34,6 +42,7 @@ export function ProductProvider({ children }) {
       const newProduct = await addProductApi(product);
       setMyProducts([...myProducts, newProduct]);
       toast.success('Producto agregado exitosamente');
+      await loadProducts(); 
     } catch (error) {
       toast.error('Error al agregar el producto');
       throw error;
@@ -45,6 +54,7 @@ export function ProductProvider({ children }) {
       const updated = await updateProductApi(productId, updatedProduct);
       setMyProducts(myProducts.map(p => p.id === productId ? updated : p));
       toast.success('Producto actualizado exitosamente');
+      await loadProducts(); 
     } catch (error) {
       toast.error('Error al actualizar el producto');
       throw error;
@@ -56,6 +66,7 @@ export function ProductProvider({ children }) {
       await deleteProductApi(productId);
       setMyProducts(myProducts.filter(p => p.id !== productId));
       toast.success('Producto eliminado exitosamente');
+      await loadProducts(); 
     } catch (error) {
       toast.error('Error al eliminar el producto');
       throw error;
@@ -79,7 +90,8 @@ export function ProductProvider({ children }) {
       addProduct,
       updateProduct,
       deleteProduct,
-      loadSales
+      loadSales,
+      loadProducts
     }}>
       {children}
     </ProductContext.Provider>

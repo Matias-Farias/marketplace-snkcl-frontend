@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { X, Trash2, Plus, Minus, CreditCard } from 'lucide-react';
+import { createPurchase } from '../services/api'; // ✅ Nuevo import
 
 function CartModal({ isOpen, onClose, cartItems, onRemoveFromCart, onUpdateQuantity }) {
   if (!isOpen) return null;
 
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const total = cartItems.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0);
-  
-  
+
   const clpTotal = Math.round(total * 942);
   const formattedTotal = new Intl.NumberFormat('es-CL', {
     style: 'currency',
@@ -18,17 +18,29 @@ function CartModal({ isOpen, onClose, cartItems, onRemoveFromCart, onUpdateQuant
     setIsCheckingOut(true);
   };
 
-  const handlePurchase = (e) => {
+  const handlePurchase = async (e) => {
     e.preventDefault();
-    
-    alert('Purchase successful! Thank you for your order.');
-    cartItems.forEach(item => onRemoveFromCart(item.id));
-    setIsCheckingOut(false);
-    onClose();
+    try {
+      const itemsToSend = cartItems.map(item => ({
+        productId: item.id,
+        quantity: item.quantity || 1,
+        size: item.selectedSize || ''
+      }));
+
+      await createPurchase(itemsToSend);
+      alert('¡Compra realizada exitosamente!');
+
+      cartItems.forEach(item => onRemoveFromCart(item.id));
+      setIsCheckingOut(false);
+      onClose();
+    } catch (error) {
+      alert('❌ Error al realizar la compra');
+      console.error('Error en createPurchase:', error);
+    }
   };
 
   const handleClearCart = () => {
-    if (window.confirm('Are you sure you want to clear your cart?')) {
+    if (window.confirm('¿Estás seguro de vaciar el carrito?')) {
       cartItems.forEach(item => onRemoveFromCart(item.id));
     }
   };
@@ -42,7 +54,7 @@ function CartModal({ isOpen, onClose, cartItems, onRemoveFromCart, onUpdateQuant
         >
           <X size={24} />
         </button>
-        
+
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold text-gray-900">Carro de Compras</h2>
@@ -55,7 +67,7 @@ function CartModal({ isOpen, onClose, cartItems, onRemoveFromCart, onUpdateQuant
               </button>
             )}
           </div>
-          
+
           {isCheckingOut ? (
             <div className="space-y-6">
               <h3 className="text-xl font-semibold text-gray-800">Pago</h3>
@@ -74,7 +86,7 @@ function CartModal({ isOpen, onClose, cartItems, onRemoveFromCart, onUpdateQuant
                     <CreditCard className="absolute right-3 top-2.5 text-gray-400" size={20} />
                   </div>
                 </div>
-                
+
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
@@ -139,7 +151,7 @@ function CartModal({ isOpen, onClose, cartItems, onRemoveFromCart, onUpdateQuant
             <>
               <div className="overflow-y-auto max-h-[60vh]">
                 {cartItems.length === 0 ? (
-                  <p className="text-gray-500 text-center py-8">Tu carro esta vacío</p>
+                  <p className="text-gray-500 text-center py-8">Tu carro está vacío</p>
                 ) : (
                   <div className="space-y-4">
                     {cartItems.map((item) => {
@@ -148,7 +160,7 @@ function CartModal({ isOpen, onClose, cartItems, onRemoveFromCart, onUpdateQuant
                         style: 'currency',
                         currency: 'CLP'
                       }).format(itemClpPrice);
-                      
+
                       return (
                         <div key={item.id} className="flex items-center space-x-4 border-b pb-4">
                           <img
@@ -160,7 +172,7 @@ function CartModal({ isOpen, onClose, cartItems, onRemoveFromCart, onUpdateQuant
                             <h3 className="font-semibold text-gray-800">{item.name}</h3>
                             <p className="text-gray-600">{formattedItemPrice}</p>
                             {item.selectedSize && (
-                              <p className="text-sm text-gray-500">Size: {item.selectedSize}</p>
+                              <p className="text-sm text-gray-500">Talla: {item.selectedSize}</p>
                             )}
                             <div className="flex items-center space-x-2 mt-2">
                               <button
@@ -199,7 +211,7 @@ function CartModal({ isOpen, onClose, cartItems, onRemoveFromCart, onUpdateQuant
                   </div>
                 )}
               </div>
-              
+
               {cartItems.length > 0 && (
                 <div className="mt-6 border-t pt-4">
                   <div className="flex justify-between items-center mb-4">
