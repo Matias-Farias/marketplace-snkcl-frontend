@@ -3,8 +3,7 @@ import {
   login as loginApi,
   logout as logoutApi,
   fetchUserPurchases,
-  fetchUserSales,
-  fetchUserProducts
+  fetchUserSales
 } from '../services/api';
 import toast from 'react-hot-toast';
 
