@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+console.log("✅ api.js cargado correctamente"); // ← Registro para verificar carga
+
 const api = axios.create({
   baseURL: 'https://marketplace-snkcl-backend.onrender.com/api'
 });
@@ -36,7 +38,7 @@ export const fetchProducts = async () => {
 };
 
 export const fetchUserProducts = async () => {
-  const response = await api.get('/products/mine'); 
+  const response = await api.get('/products/mine');
   return response.data;
 };
 
