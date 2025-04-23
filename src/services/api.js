@@ -74,3 +74,8 @@ export const toggleFavorite = async (productId) => {
   const response = await api.post(`/users/favorites/${productId}`);
   return response.data;
 };
+
+export const fetchUserProducts = async () => {
+  const response = await api.get('/users/products');
+  return response.data;
+};
