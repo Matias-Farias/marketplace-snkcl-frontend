@@ -20,14 +20,13 @@ export function ProductProvider({ children }) {
 
   useEffect(() => {
     loadProducts();
-  }, [userData]); 
+  }, [userData]);
 
   const loadProducts = async () => {
     try {
       const data = await fetchProductsApi();
       setProducts(data);
 
-    
       if (userData?.id) {
         const mine = data.filter(p => p.user_id === userData.id);
         setMyProducts(mine);
@@ -37,12 +36,22 @@ export function ProductProvider({ children }) {
     }
   };
 
+  const loadMyProducts = async () => {
+    try {
+      const data = await fetchProductsApi();
+      const mine = data.filter(p => p.user_id === userData?.id);
+      setMyProducts(mine);
+    } catch (error) {
+      toast.error('Error al cargar tus productos');
+    }
+  };
+
   const addProduct = async (product) => {
     try {
       const newProduct = await addProductApi(product);
       setMyProducts([...myProducts, newProduct]);
       toast.success('Producto agregado exitosamente');
-      await loadProducts(); 
+      await loadProducts();
     } catch (error) {
       toast.error('Error al agregar el producto');
       throw error;
@@ -54,7 +63,7 @@ export function ProductProvider({ children }) {
       const updated = await updateProductApi(productId, updatedProduct);
       setMyProducts(myProducts.map(p => p.id === productId ? updated : p));
       toast.success('Producto actualizado exitosamente');
-      await loadProducts(); 
+      await loadProducts();
     } catch (error) {
       toast.error('Error al actualizar el producto');
       throw error;
@@ -66,7 +75,7 @@ export function ProductProvider({ children }) {
       await deleteProductApi(productId);
       setMyProducts(myProducts.filter(p => p.id !== productId));
       toast.success('Producto eliminado exitosamente');
-      await loadProducts(); 
+      await loadProducts();
     } catch (error) {
       toast.error('Error al eliminar el producto');
       throw error;
@@ -91,7 +100,8 @@ export function ProductProvider({ children }) {
       updateProduct,
       deleteProduct,
       loadSales,
-      loadProducts
+      loadProducts,
+      loadMyProducts 
     }}>
       {children}
     </ProductContext.Provider>
