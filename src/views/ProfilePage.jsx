@@ -707,7 +707,7 @@ function ProfilePage({
 
             <div className="p-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                {editingProduct ? "Edit Product" : "Add New Product"}
+                {editingProduct ? "Editar Producto" : "Agregar Nuevo Producto"}
               </h2>
 
               <form
